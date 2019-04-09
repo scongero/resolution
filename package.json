@@ -1,0 +1,26 @@
+{
+  "name": "resolution",
+  "version": "1.0.0",
+  "description": "resolution",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scongero/resolution.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "bugs": {
+    "url": "https://github.com/scongero/resolution/issues"
+  },
+  "homepage": "https://github.com/scongero/resolution#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.11"
+  }
+}
