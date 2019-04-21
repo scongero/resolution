@@ -35,6 +35,26 @@ window.onload = function() {
         fillColor: A1color,
     });
 
+    /*
+    var A1text = new PointText({
+        point: [A1.position.x-40, A1.position.y-30],
+        content: 'A',
+        fillColor: 'white',
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 20
+    });
+    */
+
+    var A1text = new PointText({
+        point: [300, 50],
+        content: 'A',
+        fillColor: A1color,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
+
     var eventBCenterX = SSCenterX+40;
     var eventBCenterY = SSCenterY-40;
 
@@ -45,7 +65,25 @@ window.onload = function() {
         fillColor: B1color,
     });
 
-    
+    /*
+    var B1text = new PointText({
+        point: [B1.position.x+30, B1.position.y-30],
+        content: 'B',
+        fillColor: 'white',
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 20
+    });
+    */
+
+    var B1text = new PointText({
+        point: [350, 50],
+        content: 'B',
+        fillColor: B1color,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
 
     var eventCCenterX = SSCenterX;
     var eventCCenterY = SSCenterY+40;
@@ -56,23 +94,79 @@ window.onload = function() {
         radius: 80,
         fillColor: C1color,
     });
-   
+
+    /*
+    var C1text = new PointText({
+        point: [C1.position.x, C1.position.y+30],
+        content: 'C',
+        fillColor: 'white',
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 20
+    });
+    */
+
+    var C1text = new PointText({
+        point: [400, 50],
+        content: 'C',
+        fillColor: C1color,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
+
     var aINTbcolor = '#bb00dd';
     aINTb = A1.intersect(B1);
     aINTb.fillColor = aINTbcolor;
+
+    var aINTbtext = new PointText({
+        point: [450, 50],
+        content: 'AB',
+        fillColor: aINTbcolor,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
 
     var aINTccolor = '#bb9900';
     aINTc = A1.intersect(C1);
     aINTc.fillColor = aINTccolor;
 
+    var aINTctext = new PointText({
+        point: [500, 50],
+        content: 'AC',
+        fillColor: aINTccolor,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
+
     var bINTccolor = '#00bbbb';
     bINTc = B1.intersect(C1);
     bINTc.fillColor = bINTccolor;
+
+    var bINTctext = new PointText({
+        point: [550, 50],
+        content: 'BC',
+        fillColor: bINTccolor,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
 
     var threecolor = '#575757';
     three = A1.intersect(bINTc);
     three.fillColor = threecolor;
     three.insertAbove(aINTc);
+
+    var threetext = new PointText({
+        point: [600, 50],
+        content: 'ABC',
+        fillColor: threecolor,
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
 
 
     sampleSpace.sendToBack();
@@ -80,7 +174,7 @@ window.onload = function() {
     
 
     
-    
+    /*
     var aINTbtoggle = 0;
     aINTb.onClick = function(event) {
         if (aINTbtoggle) {
@@ -162,7 +256,7 @@ window.onload = function() {
         
     }
 
-    
+    */
     sampleSpace.sendToBack();
 
     tool1.onMouseMove = function(event) {
@@ -209,6 +303,47 @@ window.onload = function() {
             C1.visible = true;
         }
    
+    }
+
+    A1.onMouseDrag = function(event) {
+        A1.visible = false;
+        A1.position = event.point;
+
+        aINTb.copyContent(A1.intersect(B1));
+
+        aINTc.copyContent(A1.intersect(C1));
+
+        three.copyContent(A1.intersect(bINTc));
+
+        //A1text.point.x = A1.position.x-40;
+        //A1text.point.y = A1.position.y-30;
+        A1.visible = true;
+    }
+
+    B1.onMouseDrag = function(event) {
+        B1.visible = false;
+        B1.position = event.point;
+
+        aINTb.copyContent(B1.intersect(A1));
+
+        bINTc.copyContent(B1.intersect(C1));
+
+        three.copyContent(B1.intersect(aINTc));
+
+        B1.visible = true;
+    }
+
+    C1.onMouseDrag = function(event) {
+        C1.visible = false;
+        C1.position = event.point;
+
+        aINTc.copyContent(C1.intersect(A1));
+
+        bINTc.copyContent(C1.intersect(B1));
+
+        three.copyContent(C1.intersect(aINTb));
+
+        C1.visible = true;
     }
 
 
