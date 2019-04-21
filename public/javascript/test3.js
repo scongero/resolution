@@ -168,37 +168,17 @@ window.onload = function() {
     tool1.onMouseMove = function(event) {
 
         if (Key.isDown('a')) {
+
             A1.visible = false;
             A1.position = event.point;
 
             aINTb.copyContent(A1.intersect(B1));
-            if (aINTbtoggle) {
-                this.fillColor = aINTbcolor;
-                aINTbtoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                aINTbtoggle = 1;
-            }
 
             aINTc.copyContent(A1.intersect(C1));
-            if (aINTctoggle) {
-                this.fillColor = aINTccolor;
-                aINTctoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                aINTctoggle = 1;
-            }
 
             three.copyContent(A1.intersect(bINTc));
-            if (threetoggle) {
-                this.fillColor = threecolor;
-                threetoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                threetoggle = 1;
-            }
-            A1.visible = true;
 
+            A1.visible = true;
         }
 
         if (Key.isDown('d')) {
@@ -206,37 +186,13 @@ window.onload = function() {
             B1.visible = false;
             B1.position = event.point;
 
-
             aINTb.copyContent(B1.intersect(A1));
-            if (aINTbtoggle) {
-                this.fillColor = aINTbcolor;
-                aINTbtoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                aINTbtoggle = 1;
-            }
 
             bINTc.copyContent(B1.intersect(C1));
-            if (bINTctoggle) {
-                this.fillColor = bINTccolor;
-                bINTctoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                bINTctoggle = 1;
-            }
 
             three.copyContent(B1.intersect(aINTc));
-            if (threetoggle) {
-                this.fillColor = threecolor;
-                threetoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                threetoggle = 1;
-            }
 
-            
             B1.visible = true;
-
         }
 
         if (Key.isDown('s')) {
@@ -245,40 +201,14 @@ window.onload = function() {
             C1.position = event.point;
 
             aINTc.copyContent(C1.intersect(A1));
-            if (aINTctoggle) {
-                this.fillColor = aINTccolor;
-                aINTctoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                aINTctoggle = 1;
-            }
 
             bINTc.copyContent(C1.intersect(B1));
-            if (bINTctoggle) {
-                this.fillColor = bINTccolor;
-                bINTctoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                bINTctoggle = 1;
-            }
-
-            
 
             three.copyContent(C1.intersect(aINTb));
-            if (threetoggle) {
-                this.fillColor = threecolor;
-                threetoggle = 0;
-            } else {
-                this.fillColor = '#ffff00';
-                threetoggle = 1;
-            }
 
-            
             C1.visible = true;
-
         }
    
-        
     }
 
 
