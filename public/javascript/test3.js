@@ -77,40 +77,10 @@ window.onload = function() {
 
     sampleSpace.sendToBack();
 
-    var A1toggle = 0;
-    A1.onClick = function(event) {
-        if (A1toggle) {
-            this.fillColor = '#ff0000';
-            A1toggle = 0;
-        } else {
-            this.fillColor = '#ffff00';
-            A1toggle = 1;
-        }
-        
-    }
+    
 
-    var B1toggle = 0;
-    B1.onClick = function(event) {
-        if (B1toggle) {
-            this.fillColor = B1color;
-            B1toggle = 0;
-        } else {
-            this.fillColor = '#ffff00';
-            B1toggle = 1;
-        }
-        
-    }
-    var C1toggle = 0;
-    C1.onClick = function(event) {
-        if (C1toggle) {
-            this.fillColor = C1color;
-            C1toggle = 0;
-        } else {
-            this.fillColor = '#ffff00';
-            C1toggle = 1;
-        }
-        
-    }
+    
+    
     var aINTbtoggle = 0;
     aINTb.onClick = function(event) {
         if (aINTbtoggle) {
@@ -156,12 +126,49 @@ window.onload = function() {
         
     }
 
+    var C1toggle = 0;
+    C1.onClick = function(event) {
+        if (C1toggle) {
+            this.fillColor = C1color;
+            C1toggle = 0;
+        } else {
+            this.fillColor = '#ffff00';
+            C1toggle = 1;
+        }
+        
+    }
+
+    var A1toggle = 0;
+    A1.onClick = function(event) {
+        if (A1toggle) {
+            this.fillColor = '#ff0000';
+            A1toggle = 0;
+        } else {
+            this.fillColor = '#ffff00';
+            A1toggle = 1;
+        }
+        
+    }
+
+    var B1toggle = 0;
+    B1.onClick = function(event) {
+        if (B1toggle) {
+            this.fillColor = B1color;
+            B1toggle = 0;
+        } else {
+            this.fillColor = '#ffff00';
+            B1toggle = 1;
+        }
+        
+    }
+
+    
+    sampleSpace.sendToBack();
+
     tool1.onMouseMove = function(event) {
 
         if (Key.isDown('a')) {
-            aINTc.remove();
-            three.remove();
-
+            A1.visible = false;
             A1.position = event.point;
 
             aINTb.copyContent(A1.intersect(B1));
@@ -173,74 +180,108 @@ window.onload = function() {
                 aINTbtoggle = 1;
             }
 
-            aINTc = A1.intersect(C1);
-            aINTc.fillColor = '#bb9900';
+            aINTc.copyContent(A1.intersect(C1));
+            if (aINTctoggle) {
+                this.fillColor = aINTccolor;
+                aINTctoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                aINTctoggle = 1;
+            }
 
-            three = A1.intersect(bINTc);
-            three.fillColor = '#575757';
-            three.insertAbove(bINTc);
-
-            B1.insertBelow(aINTb);
-            
-            sampleSpace.sendToBack();
+            three.copyContent(A1.intersect(bINTc));
+            if (threetoggle) {
+                this.fillColor = threecolor;
+                threetoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                threetoggle = 1;
+            }
+            A1.visible = true;
 
         }
 
         if (Key.isDown('d')) {
-             aINTb.remove();
-            bINTc.remove();
-            three.remove();
 
+            B1.visible = false;
             B1.position = event.point;
 
 
-            aINTb = A1.intersect(B1);
-            aINTb.fillColor = '#bb00dd';
+            aINTb.copyContent(B1.intersect(A1));
+            if (aINTbtoggle) {
+                this.fillColor = aINTbcolor;
+                aINTbtoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                aINTbtoggle = 1;
+            }
 
-            bINTc = B1.intersect(C1);
-            bINTc.fillColor = '#00bbbb';
+            bINTc.copyContent(B1.intersect(C1));
+            if (bINTctoggle) {
+                this.fillColor = bINTccolor;
+                bINTctoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                bINTctoggle = 1;
+            }
 
-            three = A1.intersect(bINTc);
-            three.fillColor = '#575757';
-            three.insertAbove(aINTc);
+            three.copyContent(B1.intersect(aINTc));
+            if (threetoggle) {
+                this.fillColor = threecolor;
+                threetoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                threetoggle = 1;
+            }
 
             
-            sampleSpace.sendToBack();
+            B1.visible = true;
 
         }
 
         if (Key.isDown('s')) {
-             bINTc.remove();
-            aINTc.remove();
-            three.remove();
 
+            C1.visible = false;
             C1.position = event.point;
 
-            aINTc = A1.intersect(C1);
-            aINTc.fillColor = '#bb9900';
+            aINTc.copyContent(C1.intersect(A1));
+            if (aINTctoggle) {
+                this.fillColor = aINTccolor;
+                aINTctoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                aINTctoggle = 1;
+            }
 
-            bINTc = B1.intersect(C1);
-            bINTc.fillColor = '#00bbbb';
+            bINTc.copyContent(C1.intersect(B1));
+            if (bINTctoggle) {
+                this.fillColor = bINTccolor;
+                bINTctoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                bINTctoggle = 1;
+            }
 
             
 
-            three = A1.intersect(bINTc);
-            three.fillColor = '#575757';
-            three.insertAbove(aINTc);
+            three.copyContent(C1.intersect(aINTb));
+            if (threetoggle) {
+                this.fillColor = threecolor;
+                threetoggle = 0;
+            } else {
+                this.fillColor = '#ffff00';
+                threetoggle = 1;
+            }
 
             
-            sampleSpace.sendToBack();
+            C1.visible = true;
 
         }
    
         
     }
 
-    tool2.onKeyDown = function(event) {
-        if(event.key == 'r') {
-            A1.fillColor = '#888888';
-        }
-    }
+
 
 
     // Draw the view now:
