@@ -31,7 +31,10 @@ window.onload = function() {
 
     var ruleSet = {'S': [['a'],['+','S','S']]};
 
-    let varSet = ['S'];
+    var varSet = ['S'];
+
+    var literalAlphabet = ['a','b','c','d'];
+    var operationAlphabet = ['+','-','*','/'];
 
     var CFG = {
         variables: varSet,
@@ -151,6 +154,36 @@ window.onload = function() {
         return childeToRemove;
     };
 
+    function printStatementOf(node,statement) {
+
+        if (literalAlphabet.includes(node.data)) {
+            statement += node.data;
+            return statement;
+        } else if (varSet.includes(node.data)) {
+            return printStatementOf(node.children[0],statement);
+        } else if (operationAlphabet.includes(node.data)) {
+            statement += '(';
+            for (const child of node.children) {
+                statement = printStatementOf(child,statement);
+                if (child != node.children[node.children.length-1]) {
+                    statement += node.data;
+                }
+            }
+            statement += ')';
+            return statement;
+        }
+    }
+
+    Tree.prototype.speak = function() {
+        var statement = '';
+
+        statement = printStatementOf(this._root, statement);
+
+        console.log(statement);
+
+        return statement;
+    };
+
 
     var problemTree = new Tree('S');
 
@@ -166,9 +199,19 @@ window.onload = function() {
     } else {
         var operation = outputArray[randomRuleIndex][0];
         var opNodeID = problemTree.add('+',0,problemTree.traverseBF);
-        problemTree.add('S',opNodeID,problemTree.traverseBF);
+        var id1 = problemTree.add('S',opNodeID,problemTree.traverseBF);
         console.log('numNodes: ' + problemTree.numNodes);
-        problemTree.add('S',opNodeID,problemTree.traverseBF);
+        var id2 = problemTree.add('S',opNodeID,problemTree.traverseBF);
+        console.log('numNodes: ' + problemTree.numNodes);
+
+        var opNodeID2 = problemTree.add('-',id1,problemTree.traverseBF);
+
+        problemTree.add('a',opNodeID2,problemTree.traverseBF);
+        console.log('numNodes: ' + problemTree.numNodes);
+        problemTree.add('b',opNodeID2,problemTree.traverseBF);
+        console.log('numNodes: ' + problemTree.numNodes);
+
+        problemTree.add('c',id2,problemTree.traverseBF);
         console.log('numNodes: ' + problemTree.numNodes);
     }
 
@@ -178,6 +221,10 @@ window.onload = function() {
     problemTree.traverseBF(function(node) {
         console.log(node.data + ' ' + node.id);
     });
+
+    var statement = problemTree.speak();
+    problem.content += statement;
+
 
     // Draw the view now:
     paper.view.draw();
