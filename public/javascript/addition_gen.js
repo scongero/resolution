@@ -40,6 +40,8 @@ window.onload = function() {
     var literalAlphabet = ['a','b','c','d'];
     var operationAlphabet = ['+','-','*','/'];
 
+    var maxNum = 20;
+
     var CFG = {
         variables: varSet,
         rules: ruleSet,
@@ -164,7 +166,7 @@ window.onload = function() {
     function printStatementOf(node,statement) {
 
         if (literalAlphabet.includes(node.data)) {
-            statement += node.data;
+            statement += node.num;
             return statement;
         } else if (varSet.includes(node.data)) {
             return printStatementOf(node.children[0],statement);
@@ -191,6 +193,36 @@ window.onload = function() {
         return statement;
     };
 
+    function computeValOf(node) {
+        if (literalAlphabet.includes(node.data)) {
+            node.num = Math.floor(Math.random()*maxNum+1);
+            return node.num;
+        }
+        var currVal;
+        for (var child of node.children) {
+            if (child === node.children[0]) {
+                currVal = computeValOf(child);
+                continue;
+            }
+            if (node.data === '+') {
+                currVal += computeValOf(child);
+            } else if (node.data === '-') {
+                currVal -= computeValOf(child);
+            } else if (node.data === '*') {
+                currVal *= computeValOf(child);
+            } else if (node.data === '/') {
+                currVal /= computeValOf(child);
+            }
+        }
+        node.num = currVal;
+        console.log(node.num);
+        return node.num;
+    }
+
+    Tree.prototype.compute = function() {
+        return computeValOf(this._root);
+    }
+
 
     var problemTree = new Tree('S');
     console.log(problemTree.leaves);
@@ -212,7 +244,7 @@ window.onload = function() {
 
     var opCount = 0;
 
-    while(opCount<5) {
+    while(opCount<20) {
         if (problemTree.leaves.length===0) {
             break;
         }
@@ -272,57 +304,14 @@ window.onload = function() {
         printLeaves(problemTree.leaves);
     }
     
-    
 
-    console.log('start:');
-    problemTree.traverseBF(function(node) {
-        console.log(node);
-    });
-
-    /*
-    var outputString = '';
-    var outputArray = ruleSet['S'];
-    var randomRuleIndex = Math.floor(Math.random()*outputArray.length);
-    console.log(randomRuleIndex);
-    if (outputArray[randomRuleIndex][0]==='a') {
-        var num = Math.floor(Math.random()*9+1);
-        console.log('got an a ' + num);
-        outputString += 'a';
-        problemTree.add('a',0,problemTree.traverseBF);
-    } else {
-        var operation = outputArray[randomRuleIndex][0];
-        var opNodeID = problemTree.add('+',0,problemTree.traverseBF);
-        var id1 = problemTree.add('S',opNodeID,problemTree.traverseBF);
-        console.log('numNodes: ' + problemTree.numNodes);
-        var id2 = problemTree.add('S',opNodeID,problemTree.traverseBF);
-        console.log('numNodes: ' + problemTree.numNodes);
-
-        var opNodeID2 = problemTree.add('-',id1,problemTree.traverseBF);
-
-        problemTree.add('a',opNodeID2,problemTree.traverseBF);
-        console.log('numNodes: ' + problemTree.numNodes);
-        problemTree.add('b',opNodeID2,problemTree.traverseBF);
-        console.log('numNodes: ' + problemTree.numNodes);
-
-        problemTree.add('c',id2,problemTree.traverseBF);
-        console.log('numNodes: ' + problemTree.numNodes);
-    }
-
-    console.log(outputString);
-
-    console.log('start:');
-    problemTree.traverseBF(function(node) {
-        console.log(node.data + ' ' + node.id);
-    });
-    */
-
-
-
-
+    var ans = problemTree.compute();
 
     var statement = problemTree.speak();
     problem.content += statement;
 
+    
+    problem.content = problem.content + '  = ' + ans;
 
     // Draw the view now:
     paper.view.draw();
