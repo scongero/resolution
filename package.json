@@ -14,7 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mathjax-node": "^2.1.1"
   },
   "bugs": {
     "url": "https://github.com/scongero/resolution/issues"
