@@ -29,7 +29,11 @@ window.onload = function() {
         fontSize: 25
     });
 
-    var ruleSet = {'S': [['a'],['+','S','S']]};
+    var ruleSet = { 'S': ['a','+','-','*','/'],
+                    '+': [['S','S']],
+                    '-': [['S','S']],
+                    '*': [['S','S']],
+                    '/': [['S','S']]    };
 
     var varSet = ['S'];
 
@@ -49,6 +53,7 @@ window.onload = function() {
         this.data = data;
         this.id = -1;
         this.parent = null;
+        this.num = null;
         this.children = [];
     }
 
@@ -57,6 +62,7 @@ window.onload = function() {
         node.id = 0;
         this._root = node;
         this.numNodes = 1;
+        this.leaves = [this._root];
     }
 
     Tree.prototype.traverseDF = function(callback) {
@@ -110,7 +116,8 @@ window.onload = function() {
         } else {
             throw new Error('Cannot add node to a non-existent parent.');
         }
-        return child.id;
+
+        return child;
     };
 
     function findIndex(arr, data) {
@@ -186,7 +193,93 @@ window.onload = function() {
 
 
     var problemTree = new Tree('S');
+    console.log(problemTree.leaves);
 
+    function getRandomItem(arr) {
+        return arr[Math.floor(Math.random()*arr.length)];
+    }
+
+    function arrayRemove(arr, value) {
+        for (var i=0;i<arr.length;i++) {
+            if (arr[i]===value) {
+                arr.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    // generate random tree
+
+    var opCount = 0;
+
+    while(opCount<5) {
+        if (problemTree.leaves.length===0) {
+            break;
+        }
+        var leaf = getRandomItem(problemTree.leaves);
+
+        var ruleOuput = getRandomItem(ruleSet[leaf.data]);
+
+        console.log('ruleOuput');
+        console.log(ruleOuput);
+        for (const val of ruleOuput) {
+            var newChild = problemTree.add(val,leaf.id,problemTree.traverseBF);
+            console.log('newChild:');
+            console.log(newChild);
+            if (!literalAlphabet.includes(newChild.data)) {
+                problemTree.leaves.push(newChild);
+            }
+        }
+        console.log(leaf.children.length);
+        console.log(problemTree.leaves);
+        
+        arrayRemove(problemTree.leaves, leaf);
+        console.log('leaves:');
+        console.log(problemTree.leaves.length);
+
+        opCount++;
+    }
+
+    function printLeaves(array) {
+        for (const leaf of array) {
+            console.log(leaf.data);
+        }
+    }
+
+    // cleanup all leaves by going straight to literals
+    printLeaves(problemTree.leaves);
+    console.log('cleanup:');
+
+    while (problemTree.leaves.length!=0) {
+        console.log(problemTree.leaves.length);
+        var leaf = problemTree.leaves[0];
+        console.log(leaf);
+        if (ruleSet[leaf.data].includes('a')) {
+            console.log('hello');
+            problemTree.add('a',leaf.id,problemTree.traverseBF);
+        } else {
+            console.log(ruleSet[leaf.data][0]);
+            for (const val of ruleSet[leaf.data][0]){
+                var newChild = problemTree.add(val,leaf.id,problemTree.traverseBF);
+                if (!literalAlphabet.includes(newChild.data)) {
+                    problemTree.leaves.push(newChild);
+                }
+            }
+        }
+        printLeaves(problemTree.leaves);
+        problemTree.leaves.shift();
+        console.log('post shift');
+        printLeaves(problemTree.leaves);
+    }
+    
+    
+
+    console.log('start:');
+    problemTree.traverseBF(function(node) {
+        console.log(node);
+    });
+
+    /*
     var outputString = '';
     var outputArray = ruleSet['S'];
     var randomRuleIndex = Math.floor(Math.random()*outputArray.length);
@@ -221,6 +314,11 @@ window.onload = function() {
     problemTree.traverseBF(function(node) {
         console.log(node.data + ' ' + node.id);
     });
+    */
+
+
+
+
 
     var statement = problemTree.speak();
     problem.content += statement;
