@@ -29,6 +29,8 @@ window.onload = function() {
         fontSize: 25
     });
 
+    var startString = 'here is your problem: ';
+
     var ruleSet = { 'S': ['a','+','-','*','/'],
                     '+': [['S','S']],
                     '-': [['S','S']],
@@ -40,13 +42,19 @@ window.onload = function() {
     var literalAlphabet = ['a','b','c','d'];
     var operationAlphabet = ['+','-','*','/'];
 
-    var maxNum = 20;
+    var maxNum = 10;
 
     var CFG = {
         variables: varSet,
         rules: ruleSet,
         startState: 'S'
     };
+
+    // testing mathjax
+
+    var jax = document.getElementById('testJax');
+    var magVal = document.getElementById('magnitude');
+    
 
     // tree
 
@@ -172,6 +180,14 @@ window.onload = function() {
         }
     }
 
+    function printNum(num) {
+        if (num[1] === 0) {
+            return num[0].toFixed(2);
+        } else {
+            return '(' + num[0].toFixed(2) + ' + ' + num[1].toFixed(2) + 'j)';
+        }
+    }
+
     function printStatementOf(node,statement) {
 
         if (literalAlphabet.includes(node.data)) {
@@ -181,11 +197,23 @@ window.onload = function() {
             return printStatementOf(node.children[0],statement);
         } else if (operationAlphabet.includes(node.data)) {
             statement += '(';
+            if (node.data === '/') {
+                statement += '\\frac{';
+            }
             for (const child of node.children) {
                 statement = printStatementOf(child,statement);
                 if (child != node.children[node.children.length-1]) {
-                    statement += node.data;
+                    if (node.data === '*') {
+                        statement += '\\cdot';
+                    } else if (node.data === '/') {
+                        statement += '}{';
+                    } else {
+                        statement += node.data;
+                    }
                 }
+            }
+            if (node.data === '/') {
+                statement += '}';
             }
             statement += ')';
             return statement;
@@ -201,6 +229,15 @@ window.onload = function() {
 
         return statement;
     };
+
+    Tree.prototype.assignValuesToLiterals = function() {
+        this.traverseBF(function(node) {
+            if (literalAlphabet.includes(node.data)) {
+                node.numA = Math.floor(Math.random()*maxNum+1);
+                node.numB = Math.floor(Math.random()*maxNum);
+            }
+        });
+    }
 
     function complexAdd(val1, val2) {
         return [val1[0]+val2[0],val1[1]+val2[1]];
@@ -219,8 +256,6 @@ window.onload = function() {
 
     function computeValOf(node) {
         if (literalAlphabet.includes(node.data)) {
-            node.numA = Math.floor(Math.random()*maxNum+1);
-            node.numB = Math.floor(Math.random()*maxNum);
             return [node.numA, node.numB];
         }
         var currVal;
@@ -248,6 +283,111 @@ window.onload = function() {
         return computeValOf(this._root);
     }
 
+    function complexMag(c) {
+        return [Math.sqrt(Math.pow(c[0],2)+Math.pow(c[1],2)),0];
+    }
+
+    function complexArg(c) {
+        return [Math.atan2(c[1],c[0]),0]
+    }
+
+    function findMagOf(node) {
+        // node.children.length = 0
+        if (literalAlphabet.includes(node.data)) {
+            return complexMag([node.numA,node.numB]);
+        }
+
+        // node.children.length > 0
+        var currVal;
+        if (varSet.includes(node.data)) {
+            currVal = findMagOf(node.children[0]);
+        } else if (node.data === '+') {
+            currVal = computeValOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexAdd(currVal,computeValOf(node.children[i]));
+            }
+            currVal = complexMag(currVal);
+        } else if (node.data === '-') {
+            currVal = computeValOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexSub(currVal,computeValOf(node.children[i]));
+            }
+            currVal = complexMag(currVal);
+        } else if (node.data === '*') {
+            currVal = findMagOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexMult(currVal,findMagOf(node.children[i]));
+            }
+        } else if (node.data === '/') {
+            currVal = findMagOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexDiv(currVal,findMagOf(node.children[i]));
+            }
+        }
+        
+        node.numA = currVal[0];
+        node.numB = currVal[1];
+
+        return [node.numA,node.numB];
+    }
+
+    function findArgOf(node) {
+        // node.children.length = 0
+        if (literalAlphabet.includes(node.data)) {
+            return complexArg([node.numA,node.numB]);
+        }
+
+        // node.children.length > 0
+        var currVal;
+        if (varSet.includes(node.data)) {
+            currVal = findArgOf(node.children[0]);
+        } else if (node.data === '+') {
+
+            currVal = computeValOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexAdd(currVal,computeValOf(node.children[i]));
+            }
+            currVal = complexArg(currVal);
+
+        } else if (node.data === '-') {
+
+            currVal = computeValOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexSub(currVal,computeValOf(node.children[i]));
+            }
+            currVal = complexArg(currVal);
+
+        } else if (node.data === '*') {
+
+            currVal = findArgOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexAdd(currVal,findArgOf(node.children[i]));
+            }
+
+        } else if (node.data === '/') {
+
+            currVal = findArgOf(node.children[0]);
+            for (var i=1;i<node.children.length;i++) {
+                currVal = complexSub(currVal,findArgOf(node.children[i]));
+            }
+
+        }
+        
+        node.numA = currVal[0];
+        node.numB = currVal[1];
+
+        return [node.numA,node.numB];
+    }
+
+
+    Tree.prototype.findMag = function() {
+        return findMagOf(this._root);
+    }
+
+    Tree.prototype.findArg = function() {
+        return findArgOf(this._root);
+    }
+
 
     var problemTree = new Tree('S');
     console.log(problemTree.leaves);
@@ -269,7 +409,7 @@ window.onload = function() {
 
     var opCount = 0;
 
-    while(opCount<6) {
+    while(opCount<4) {
         if (problemTree.leaves.length===0) {
             break;
         }
@@ -328,6 +468,8 @@ window.onload = function() {
         console.log('post shift');
         printLeaves(problemTree.leaves);
     }
+
+    problemTree.assignValuesToLiterals();
     
 
     var ans = problemTree.compute();
@@ -338,7 +480,27 @@ window.onload = function() {
     
     problem.content = problem.content + '  = ' + ans[0].toFixed(2) + ' + ' + ans[1].toFixed(2) + 'j';
 
+    problem.content = '';
+
+    statement = statement.substr(1).slice(0,-1);
+
+    jax.innerHTML = startString + '$' + statement + '  = ' + ans[0].toFixed(2) + ' + ' + ans[1].toFixed(2) + 'j' + '$';
     // Draw the view now:
+
+
+    var mag = problemTree.findMag();
+    magnitude.innerHTML = 'magnitude: ' + '$' + printNum(mag) + '$' + '   =?   ' + '$' + printNum(complexMag(ans)) + '$';
+
+    var arg = problemTree.findArg();
+    argument.innerHTML = 'argument: ' + '$' + printNum(arg) + '$' + '   =?   ' + '$' + printNum(complexArg(ans)) + '$';
+
+
+     MathJax.Hub.Queue(
+    function () {
+    jax.style.visibility = "";
+    magnitude.style.visibility = "";
+    argument.style.visibility = "";
+    });
     paper.view.draw();
 
 }

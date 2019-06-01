@@ -7,6 +7,13 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="./javascript/paper-full.js"></script>
 	<script type="text/javascript" src="./javascript/Queue.src.js"></script>
+	<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+
+});
+</script>
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
 	<link rel="stylesheet" href="css/style.css">
 	<title>Resolution</title>
 	
@@ -14,6 +21,11 @@
 </head>
 <body>
 	<h1>resolution</h1>
+	<font size="6"><p id="testJax" style="visibility:hidden"></p></font>
+
+	<font size="6"><p id="magnitude" style="visibility:hidden"></p></font>
+
+	<font size="6"><p id="argument" style="visibility:hidden"></p></font>
 
 	<div id="container">
 		<canvas id="myCanvas" width="2000px" height="1000px"></canvas>
