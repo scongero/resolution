@@ -240,7 +240,9 @@ window.onload = function() {
     }
 
     function complexAdd(val1, val2) {
-        return [val1[0]+val2[0],val1[1]+val2[1]];
+        var ans = [val1[0]+val2[0],val1[1]+val2[1]];
+
+        return ans;
     }
     function complexSub(val1, val2) {
         return [val1[0]-val2[0],val1[1]-val2[1]];
@@ -256,6 +258,7 @@ window.onload = function() {
 
     function computeValOf(node) {
         if (literalAlphabet.includes(node.data)) {
+           
             return [node.numA, node.numB];
         }
         var currVal;
@@ -276,6 +279,8 @@ window.onload = function() {
         }
         node.numA = currVal[0];
         node.numB = currVal[1];
+
+
         return [node.numA,node.numB];
     }
 
@@ -284,7 +289,13 @@ window.onload = function() {
     }
 
     function complexMag(c) {
-        return [Math.sqrt(Math.pow(c[0],2)+Math.pow(c[1],2)),0];
+        var ans = Math.sqrt(Math.pow(c[0],2)+Math.pow(c[1],2));
+        /*
+         var para = document.createElement("P");               // Create a <p> element
+para.innerText = '$\\sqrt{' + c[0] + '^2 + ' + c[1] + '^2} = ' + ans + '$';               // Insert text
+document.getElementById('testJax').appendChild(para);
+*/
+        return [ans,0];
     }
 
     function complexArg(c) {
@@ -409,6 +420,8 @@ window.onload = function() {
 
     var opCount = 0;
 
+    
+
     while(opCount<4) {
         if (problemTree.leaves.length===0) {
             break;
@@ -503,4 +516,5 @@ window.onload = function() {
     });
     paper.view.draw();
 
+    
 }
