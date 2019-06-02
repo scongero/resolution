@@ -1,33 +1,15 @@
-paper.install(window)
-
 window.onload = function() {
-        // Get a reference to the canvas object
-        var canvas = document.getElementById('myCanvas');
-        // Create an empty project and a view for the canvas:
 
-        paper.setup(canvas);
-        // Create a Paper.js Path to draw a line into it:
-        var event_height = 70;
+    var paper = Raphael(0,0,1000,2000);
 
-        var SSCenterX = 500;
-    var SSCenterY = 300;
+    // Creates circle at x = 50, y = 40, with radius 10
+var circle = paper.circle(50, 40, 10);
+// Sets the fill attribute of the circle to red (#f00)
+circle.attr("fill", "#f00");
 
-    var sampleSpace = new Path.Circle({
-        center: [SSCenterX, SSCenterY],
-        radius: 200,
-        fillColor: '#dedede',
-        strokeWidth: 5,
-        strokeColor: '#cdcdcd'
-    });
-
-    var problem = new PointText({
-        point:[50,50],
-        content: 'Here is your problem: ',
-        fillColor: 'black',
-        fontFamily: 'Courier New',
-        fontWeight: 'bold',
-        fontSize: 25
-    });
+// Sets the stroke attribute of the circle to white
+circle.attr("stroke", "#fff");
+        
 
     var startString = 'here is your problem: ';
 
@@ -488,12 +470,6 @@ document.getElementById('testJax').appendChild(para);
     var ans = problemTree.compute();
 
     var statement = problemTree.speak();
-    problem.content += statement;
-
-    
-    problem.content = problem.content + '  = ' + ans[0].toFixed(2) + ' + ' + ans[1].toFixed(2) + 'j';
-
-    problem.content = '';
 
     statement = statement.substr(1).slice(0,-1);
 
@@ -514,7 +490,6 @@ document.getElementById('testJax').appendChild(para);
     magnitude.style.visibility = "";
     argument.style.visibility = "";
     });
-    paper.view.draw();
 
     
 }
